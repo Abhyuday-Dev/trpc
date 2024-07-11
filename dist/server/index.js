@@ -20,15 +20,38 @@ const appRouter = (0, trpc_1.router)({
     createTodo: trpc_1.publicProcedure
         .input(todoInputTypes)
         .mutation((opts) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log(opts.ctx.username);
         const title = opts.input.title;
         const description = opts.input.description;
         //Db
         return {
             id: "1",
         };
+    })),
+    signup: trpc_1.publicProcedure
+        .input(zod_1.z.object({
+        email: zod_1.z.string(),
+        password: zod_1.z.string(),
+    }))
+        .mutation((opts) => __awaiter(void 0, void 0, void 0, function* () {
+        const username = opts.ctx.username;
+        let email = opts.input.email;
+        let password = opts.input.password;
+        //Db
+        let token = '1541992';
+        return {
+            token: token,
+        };
     }))
 });
 const server = (0, standalone_1.createHTTPServer)({
     router: appRouter,
+    createContext(opts) {
+        let authHeader = opts.req.headers["authorization"];
+        //jwt verify
+        return {
+            username: "123"
+        };
+    }
 });
 server.listen(3000);
